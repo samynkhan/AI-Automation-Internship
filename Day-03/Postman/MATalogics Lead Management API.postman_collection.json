@@ -1,0 +1,112 @@
+{
+  "info": {
+    "_postman_id": "368a8966-f3e9-4813-bf2a-9e9cf27626be",
+    "name": "MATalogics Lead Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57421176",
+    "_collection_link": "https://go.postman.co/collection/57421176-368a8966-f3e9-4813-bf2a-9e9cf27626be?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Lead",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Muhammad Ahmad\",\r\n  \"email\": \"ahmad@gmail.com\",\r\n  \"phone\": \"+923001234567\",\r\n  \"company\": \"MATalogics\",\r\n  \"interest\": \"AI Automation\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/create-lead",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "create-lead"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Leads",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/get-leads",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "get-leads"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Lead",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ahmad@gmail.com\",\r\n  \"phone\": \"+923111111111\",\r\n  \"company\": \"MATalogics Pvt Ltd\",\r\n  \"interest\": \"AI Agents\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/update-lead",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "update-lead"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE /delete-lead",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"ahmad@gmail.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/delete-lead",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "delete-lead"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}
