@@ -1,0 +1,165 @@
+{
+  "name": "Task: 05 (Slack + Notion + Forms)",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1v7dkwwazHAQXz4U9eax2O1O6b4K8Y8-8t-xEpaEb0OM",
+          "mode": "list",
+          "cachedResultName": "X_Student Registration Form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1v7dkwwazHAQXz4U9eax2O1O6b4K8Y8-8t-xEpaEb0OM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1483771838,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1v7dkwwazHAQXz4U9eax2O1O6b4K8Y8-8t-xEpaEb0OM/edit#gid=1483771838"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f6804253-7a8f-43fe-910e-d67b2bf22e41",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "I06doMjv9MTVj3eE",
+          "name": "Google Sheets Trigger account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "e1c25cc0-03b3-40e5-b4a6-74e192517a8a",
+          "mode": "list",
+          "cachedResultName": "Student Registration",
+          "cachedResultUrl": "https://app.notion.com/p/b474f6bf38a846f98e4c0477363cff14"
+        },
+        "title": "={{ $json['Full Name '] }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Email|email",
+              "emailValue": "={{ $json['  Email  '] }}"
+            },
+            {
+              "key": "Course|rich_text",
+              "textContent": "={{ $json['Course '] }}"
+            },
+            {
+              "key": "Status|status",
+              "statusValue": "New"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "f2337b34-d5d1-464e-a2c0-1ad461c6ddfc",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "cA1VRG0YjVa67pGF",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/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",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "channel",
+              "value": "n8n-alerts"
+            },
+            {
+              "name": "username",
+              "value": "webhookbot"
+            },
+            {
+              "name": "text",
+              "value": "=New Student Registration!\n\nName: {{ $('Google Sheets Trigger').item.json['Full Name '] }} Email: {{ $('Google Sheets Trigger').item.json['  Email  '] }} Course: {{ $('Google Sheets Trigger').item.json['Course '] }}"
+            },
+            {
+              "name": "icon_emoji",
+              "value": "ghost"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "36be38ea-fe0b-4293-bb69-eba4cddecf66",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3d8818a9-4ac6-4963-9674-d508aafec0a8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bee3ccfab4f242e9c0c5d25d7b0f569af8dd35929506d2fd6f2f0f4dbacdb895"
+  },
+  "nodeGroups": [],
+  "id": "6ImXmEfhckVrgBym",
+  "tags": []
+}
