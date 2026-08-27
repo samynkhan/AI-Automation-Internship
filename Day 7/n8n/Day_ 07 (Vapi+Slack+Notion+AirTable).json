@@ -1,0 +1,363 @@
+{
+  "name": "Day: 07 (Vapi+Slack+Notion+AirTable)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Client.Onboarding.Agent",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -448,
+        0
+      ],
+      "id": "1030a6bb-49a2-4ad3-8278-39642753be44",
+      "name": "Webhook",
+      "webhookId": "6bba9241-7b91-4292-94e0-0ef3a9a92696"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body || $json;\n\nconst client_name = body.client_name || body.message?.toolCalls?.[0]?.function?.arguments?.client_name || \"Hafiz Ahmed\";\nconst company_name = body.company_name || body.message?.toolCalls?.[0]?.function?.arguments?.company_name || \"Lekki Group\";\nconst email = body.email || body.message?.toolCalls?.[0]?.function?.arguments?.email || \"ahmad@lekki.com\";\nconst service_required = body.service_required || body.message?.toolCalls?.[0]?.function?.arguments?.service_required || \"AI Chatbot\";\nconst project_description = body.project_description || body.message?.toolCalls?.[0]?.function?.arguments?.project_description || \"Chatbot for ordering\";\nlet budget_raw = body.budget || body.message?.toolCalls?.[0]?.function?.arguments?.budget || 2000;\n\n// Convert USD to PKR (Assuming 1 USD ≈ 280 PKR) if value is under 10000\nlet budget_in_pkr = Number(budget_raw);\nif (budget_in_pkr < 10000) {\n  budget_in_pkr = budget_in_pkr * 280; \n}\n\n// Priority Logic\nlet priority = \"LOW\";\nlet header_title = \"STANDARD CLIENT\";\n\nif (budget_in_pkr >= 500000) {\n  priority = \"HIGH\";\n  header_title = \"HIGH PRIORITY CLIENT\";\n} else if (budget_in_pkr >= 200000) {\n  priority = \"MEDIUM\";\n  header_title = \"MEDIUM PRIORITY CLIENT\";\n}\n\nlet service_category = \"Software & Automation\";\nif (service_required.toLowerCase().includes(\"web\") || service_required.toLowerCase().includes(\"mobile\") || service_required.toLowerCase().includes(\"app\")) {\n  service_category = \"Web & Mobile Development\";\n}\n\nreturn [{\n  json: {\n    client_name,\n    company_name,\n    email,\n    service_required,\n    service_category,\n    project_description,\n    budget_original: budget_raw,\n    budget_pkr: budget_in_pkr,\n    priority,\n    header_title,\n    summary: `${company_name} requires ${service_required.toLowerCase()}.`,\n    next_action: \"Schedule technical consultation\",\n    status: \"New\",\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "5f466496-876e-4b2a-b20e-41acb10120fe",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app3NrtKyHW8tJIxJ",
+          "mode": "list",
+          "cachedResultName": "MonetexAI",
+          "cachedResultUrl": "https://airtable.com/app3NrtKyHW8tJIxJ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblQimwoDXDfPgkTf",
+          "mode": "list",
+          "cachedResultName": "Client Onboarding",
+          "cachedResultUrl": "https://airtable.com/app3NrtKyHW8tJIxJ/tblQimwoDXDfPgkTf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Client Name": "={{ $json.client_name }}",
+            "Company": "={{ $json.company_name }}",
+            "Email": "={{ $json.email }}",
+            "Service": "={{ $json.service_required }}",
+            "Description": "={{ $json.project_description }}",
+            "Budget": "={{ $json.budget_pkr }}",
+            "Category": "={{ $json.service_category }}",
+            "Priority": "={{ $json.priority }}",
+            "Summary": "={{ $json.summary }}",
+            "Status": "={{ $json.status }}",
+            "Created At": "={{ $json.created_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        48,
+        0
+      ],
+      "id": "d69f3e00-d3ea-4d14-9da1-e8e39102eb54",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "S7y9xpUyPWfsv4J0",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "3c394e1a-8d55-8006-9415-000beed35fea",
+          "mode": "list",
+          "cachedResultName": "Client Projects",
+          "cachedResultUrl": "https://app.notion.com/p/3c394e1a8d55806d8c24ca77e83a0f3c"
+        },
+        "title": "={{ $json.fields.Company }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Client|rich_text",
+              "textContent": "={{ $json.fields['Client Name'] }}"
+            },
+            {
+              "key": "Email|email",
+              "emailValue": "={{ $json.fields.Email }}"
+            },
+            {
+              "key": "Service|rich_text",
+              "textContent": "={{ $json.fields.Service }}"
+            },
+            {
+              "key": "Budget|number",
+              "numberValue": "={{ $json.fields.Budget}}"
+            },
+            {
+              "key": "Priority|rich_text",
+              "textContent": "={{ $json.fields.Priority }}"
+            },
+            {
+              "key": "Summary|rich_text",
+              "textContent": "={{ $json.fields.Summary }}"
+            },
+            {
+              "key": "Next Action|rich_text",
+              "textContent": "={{ $json.fields.Description }}"
+            },
+            {
+              "key": "Status|rich_text",
+              "textContent": "={{ $json.fields.Status }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        272,
+        0
+      ],
+      "id": "06c5689f-f1d6-446b-96d1-3af932cc87cf",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "TdidPPkmcalhSnwH",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BQUMCUU65",
+          "mode": "list",
+          "cachedResultName": "client-updates"
+        },
+        "text": "=*{{ $json.property_priority == 'HIGH' ? '🚨 HIGH PRIORITY CLIENT' : ($json.property_priority == 'MEDIUM' ? '⚡ MEDIUM PRIORITY CLIENT' : 'ℹ️ STANDARD CLIENT') }}*\n\n*Client:* {{ $json.property_client }} - {{ $json.property_company_name }}\n*Service:* {{ $json.property_service }}\n*Budget:* PKR {{ $json.property_budget }}\n*Priority:* {{ $json.property_priority }}\n*AI Summary:* {{ $json.property_summary }}\n*Next Action:* {{ $json.property_next_action }}\n\n_Airtable + Notion records created successfully._",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        496,
+        0
+      ],
+      "id": "09906893-80ca-4c90-b576-4b498338a010",
+      "name": "Send a message",
+      "webhookId": "28202418-87ae-4e00-acda-0cac12cdf852",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "1ahFiYmiD63adrVo",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7fad9229-0a67-48fe-8cb8-56527b24a3e7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bee3ccfab4f242e9c0c5d25d7b0f569af8dd35929506d2fd6f2f0f4dbacdb895"
+  },
+  "nodeGroups": [],
+  "id": "3zmT9MBISlkctvhC",
+  "tags": []
+}
